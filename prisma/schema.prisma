@@ -1,0 +1,35 @@
+//Aqui ficarão todas as nossas tabelas, conf do nosso banco de acrodo com a Dani não é 
+//aconselhável usar o banco SQLite em produção, usa-se outro banco.
+//dev.db é onde ficará todas nossas tabelas, toda estrutura do banco.
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User{
+  //Faz autoincrement
+  //Para campos não obrigatórios, add o "?" após o tipo "String?"
+  id          String @id @default(uuid())
+  name        String
+  github_id   Int
+  avatar_url  String
+  login       String
+
+  messages Message[]
+  @@map("users")
+}
+
+model Message {
+  id          String @id @default(uuid())
+  text        String
+  created_at  DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+
+  user_id String
+  @@map("messages")
+}
